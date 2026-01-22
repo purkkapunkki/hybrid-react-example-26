@@ -1,12 +1,11 @@
+import {type NavigateFunction, useNavigate, useLocation} from 'react-router';
 import type {MediaItem} from 'hybrid-types/DBTypes';
 
-const SingleView = (props: {
-  item: MediaItem | undefined;
-  setSelectedItem: (item: MediaItem | undefined) => void;
-}) => {
-  const {item, setSelectedItem} = props;
+const Single = () => {
+  const {state} = useLocation();
+  const item: MediaItem = state.item;
+  const navigate: NavigateFunction = useNavigate();
   return (
-
     <dialog open>
       {item && (
         <>
@@ -15,23 +14,18 @@ const SingleView = (props: {
             <img src={item.filename} alt={item.description || item.title} />
           )}
           {item.media_type.split('/')[0] === 'video' && (
-            <video src={item.filename} controls/>
+            <video src={item.filename} controls />
           )}
           <p>{item.description}</p>
           <p>
             Uploaded at {new Date(item.created_at).toLocaleString('en-fi')} by
             user id {item.user_id}
           </p>
-          <button
-            onClick={() => {
-              setSelectedItem(undefined);
-            }}
-          >
-            Close
-          </button>
+          <button onClick={() => navigate(-1)}>Go back</button>
         </>
       )}
     </dialog>
   );
 };
-export default SingleView;
+
+export default Single;
